@@ -1,0 +1,21 @@
+form {
+    margin-top: 3rem;
+}
+
+#working-directory-area {
+    border: 2px solid red;
+    overflow-y: auto;
+    height: 300px;
+}
+
+#staging-area {
+    border: 2px solid green
+}
+
+#repository-area {
+    border: 2px solid blue
+}
+
+.git-area>h3 {
+    text-align: center;
+}
