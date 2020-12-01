@@ -129,10 +129,21 @@ class Visualize {
         if(command_split[0] == "git" && command_split[1] == "add"){
             const workingDirList = [...this.workingDir.querySelectorAll(".item")]
             let stagingList = this.stagingArea
-            if(command_split[2] == "."){
-                workingDirList.forEach(function(div){
-                    stagingList.appendChild(div)
-                })
+            if(command_split[2] == "." && workingDirList.length > 0){
+                const versionIds = workingDirList.map((list) => list.dataset.versionId)
+                const data = {
+                    versionIds: versionIds,
+                    stage: 2
+                }
+                fetch("http://localhost:3000/versions/bulk", {
+                    method: "PATCH",
+                    headers: {"Content-Type": "application/json"},
+                    body: JSON.stringify(data)
+                }).then(res => res.json()).then(json=> {
+                    workingDirList.forEach(function(div){
+                        stagingList.appendChild(div)
+                    })
+                });
             }else if (workingDirList.find((div)=>div.dataset.fileName == command_split[2])){
                 stagingList.appendChild(workingDirList.find((div)=>div.dataset.fileName == command_split[2]))
             }
