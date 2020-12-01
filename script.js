@@ -6,9 +6,9 @@ class Visualize {
         this.gitButtonSetup();
     }
 
-    workingDir = document.getElementById("working-directory-area");
-    stagingArea = document.getElementById("staging-area");
-    repoArea = document.getElementById("repository-area");
+    workingDir = document.getElementById("working-directory-list");
+    stagingArea = document.getElementById("staging-area-list");
+    repoArea = document.getElementById("repository-area-list");
 
     gitAddDotBtn = document.getElementById('git-add-dot');
     gitCommitBtn = document.getElementById('git-commit');
@@ -54,8 +54,6 @@ class Visualize {
     }
 
     renderGitLists(id) {
-
-
         fetch(`http://localhost:3000/repositories/${id}/documents`)
             .then(res => res.json())
             .then(data => this.createListItems(data))
@@ -77,20 +75,20 @@ class Visualize {
                         break;
                 }
 
-                const newItem = document.createElement('div');
-                newItem.textContent = object.name;
-                list.append(newItem);
+                const itemDiv = document.createElement('div');
+                    itemDiv.classList.add('item');
+                const fileI = document.createElement('i');
+                    fileI.className += 'large file alternate middle aligned icon';
+                const contentDiv = document.createElement('div');
+                    contentDiv.classList.add('content');
+                const contentLink = document.createElement('a');
+                    contentLink.classList.add('header');
+                    contentLink.textContent = object.name;
+                contentDiv.append(contentLink);
+                itemDiv.append(fileI, contentDiv);
+                list.append(itemDiv);
             });
-
-        })
-
-        // <div class="item">
-        //                 <i class="large file alternate middle aligned icon"></i>
-        //                 <div class="content">
-        //                     <a class="header">style.css</a>
-        //                 </div>
-        //             </div>
-        // })
+        });
     }
 
     gitButtonSetup() {
