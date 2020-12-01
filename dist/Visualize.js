@@ -3,12 +3,18 @@ class Visualize {
         this.createDocument();
         this.getData('http://localhost:3000/repositories', this.renderOptions);
         this.selectEvent();
+        this.closeError.addEventListener('click', () => {
+            this.fileError.style.display = 'none';
+        })
     }
 
     workingDir = document.getElementById("working-directory-area-list");
     stagingArea = document.getElementById("staging-area-list");
     repoArea = document.getElementById("repository-area-list");
     repoList = document.getElementById("repo-options");
+
+    fileError = document.getElementById("file-error");
+    closeError = document.getElementById("close-error");
 
     repoForm = document.getElementById('repo-form');
 
@@ -48,13 +54,24 @@ class Visualize {
                 repository_id: repoId
             }
             fetch('http://localhost:3000/documents', {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify(data)
-            })
-            this.createListItem(name, 1, this.workingDir);
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(data)
+                })
+                .then(res => res.json())
+                .then(json => {
+                    this.repoForm.reset();
+                    this.createListItem(name, 1, this.workingDir)
+                })
+                .catch(err => {
+                    console.log(err);
+                    if (err) {
+                        this.fileError.style.display = "inline-block";
+                        setTimeout(() => this.fileError.style.display = 'none', 5000);
+                    }
+                })
         });
     }
 
