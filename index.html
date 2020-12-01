@@ -9,8 +9,9 @@
     <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.js"></script>
     <link rel="stylesheet" href="style.css">
-    <script defer src="javascript/script.js"></script>
-    <script defer src="javascript/gitUi.js"></script>
+    <script src="dist/Visualize.js"></script>
+    <script src="dist/GitCommand.js"></script>
+    <script src="dist/script.js"></script>
 </head>
 
 <body>
@@ -81,7 +82,7 @@
 
         <div class="ui equal width grid">
             <button class="ui red button column" id="git-add-dot">git add .</button>
-            <button class="ui orange button column" id="git-commit">git commit -m ""</button>
+            <button class="ui orange button column" id="git-commit">git commit -m</button>
             <button class="ui yellow button column" id="git-reset-soft">git reset --soft HEAD~1</button>
             <button class="ui olive button column" id="git-reset-dot">git reset .</button>
             <button class="ui green button column" id="git-checkout-dot">git checkout .</button>
