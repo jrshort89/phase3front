@@ -4,6 +4,7 @@ class Visualize {
         this.getData('http://localhost:3000/repositories', this.renderOptions);
         this.renderGitLists(1);
         this.gitButtonSetup();
+        this.gitCommandRunSetup();
     }
 
     workingDir = document.getElementById("working-directory-area");
@@ -111,7 +112,7 @@ class Visualize {
         let gitCommandForm = document.getElementById("git-command-form");
         gitCommandForm.addEventListener("submit", (event) => {
             event.preventDefault();
-            console.log(event);
+            console.log(event.target.git_command.value);
         })
     }
 }
