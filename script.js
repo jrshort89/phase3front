@@ -8,7 +8,7 @@ class Visualize {
         this.gitCommandRunSetup();
     }
 
-    workingDir = document.getElementById("working-directory-list");
+    workingDir = document.getElementById("working-directory-area-list");
     stagingArea = document.getElementById("staging-area-list");
     repoArea = document.getElementById("repository-area-list");
     repoList = document.getElementById("repo-options")
@@ -123,14 +123,38 @@ class Visualize {
         event.preventDefault();
         const command = event.target.git_command.value
         const command_split = command.split(" ");
-
         if(command_split[0] == "git" && command_split[1] == "add"){
-            if(command_split[2] = "."){
-                
-            }else if (command_split[name]){
-
+            const workingDirList = [...this.workingDir.querySelectorAll(".item")]
+            let stagingList = this.stagingArea
+            if(command_split[2] == "."){
+                workingDirList.forEach(function(div){
+                    stagingList.appendChild(div)
+                })
+            }else if (workingDirList.find((div)=>div.dataset.fileName == command_split[2])){
+                stagingList.appendChild(workingDirList.find((div)=>div.dataset.fileName == command_split[2]))
+            }
+        } else if(command_split[0] == "git" && command_split[1] == "reset"){
+            const stagingList = [...this.stagingArea.querySelectorAll(".item")]
+            let workingDirList = this.workingDir
+            if(command_split[2] == "."){
+                stagingList.forEach(function(div){
+                    workingDirList.appendChild(div)
+                })
+            }else if (stagingList.find((div)=>div.dataset.fileName == command_split[2])){
+                workingDirList.appendChild(stagingList.find((div)=>div.dataset.fileName == command_split[2]))
+            }
+        } else if(command_split[0] == "git" && command_split[1] == "checkout"){
+            const workingDirList = [...this.workingDir.querySelectorAll(".item")]
+            if(command_split[2] == "."){
+                workingDirList.forEach(function(div){
+                    div.remove()
+                })
+            }else if (workingDirList.find((div)=>div.dataset.fileName == command_split[2])){
+                workingDirList.find((div)=>div.dataset.fileName == command_split[2]).remove()
             }
         }
+
+        event.target.reset();
     }
 }
 
