@@ -11,7 +11,7 @@ class Visualize {
     workingDir = document.getElementById("working-directory-area-list");
     stagingArea = document.getElementById("staging-area-list");
     repoArea = document.getElementById("repository-area-list");
-    repoList = document.getElementById("repo-options")
+    repoList = document.getElementById("repo-options");
 
     gitAddDotBtn = document.getElementById('git-add-dot');
     gitCommitBtn = document.getElementById('git-commit');
@@ -19,7 +19,7 @@ class Visualize {
     gitResetDotBtn = document.getElementById('git-reset-dot');
     gitCheckoutDotBtn = document.getElementById('git-checkout-dot');
 
-    form = document.getElementById('repo-form');
+    repoForm = document.getElementById('repo-form');
 
     getData(url, method) {
         fetch(url)
@@ -38,14 +38,17 @@ class Visualize {
     }
 
     selectEvent() {
-        document.getElementById('repo-form-selector').addEventListener('submit', (event) =>{
+        document.getElementById("repo-options").addEventListener('change', (event) => {
             event.preventDefault();
+            this.workingDir.innerHTML = '';
+            this.stagingArea.innerHTML = '';
+            this.repoArea.innerHTML = '';
             this.renderGitLists(this.repoList.value)
         });
     }
 
     createDocument() {
-        this.form.addEventListener("submit", (event) => {
+        this.repoForm.addEventListener("submit", (event) => {
             event.preventDefault();
             const name = event.target.fileName.value;
             const repoId = document.getElementById("repo-options").value;
@@ -60,6 +63,7 @@ class Visualize {
                 },
                 body: JSON.stringify(data)
             })
+            this.createListItem(name, 1, this.workingDir);
         });
     }
 
@@ -84,23 +88,26 @@ class Visualize {
                         list = this.repoArea;
                         break;
                 }
+                this.createListItem(object.name, version.id, list);
+            });
+        });
+    }
 
-                const itemDiv = document.createElement('div');
-                    itemDiv.classList.add('item');
-                    itemDiv.dataset.fileName = object.name;
-                    itemDiv.dataset.versionId = version.id;
+    createListItem(text, versionId, list) {
+        const itemDiv = document.createElement('div');
+                itemDiv.classList.add('item');
+                itemDiv.dataset.fileName = text;
+                itemDiv.dataset.versionId = versionId;
                 const fileI = document.createElement('i');
-                    fileI.className += 'large file alternate middle aligned icon';
+                fileI.className += 'large file alternate middle aligned icon';
                 const contentDiv = document.createElement('div');
-                    contentDiv.classList.add('content');
+                contentDiv.classList.add('content');
                 const contentLink = document.createElement('a');
-                    contentLink.classList.add('header');
-                    contentLink.textContent = object.name;
+                contentLink.classList.add('header');
+                contentLink.textContent = text;
                 contentDiv.append(contentLink);
                 itemDiv.append(fileI, contentDiv);
                 list.append(itemDiv);
-            });
-        });
     }
 
     gitButtonSetup() {
@@ -122,7 +129,7 @@ class Visualize {
         gitCommandForm.addEventListener("submit", (event) => this.gitCommandRunCallback(event))
     }
 
-    gitCommandRunCallback(event){
+    gitCommandRunCallback(event) {
         event.preventDefault();
         const command = event.target.git_command.value
         const command_split = command.split(" ");
@@ -171,5 +178,3 @@ class Visualize {
         event.target.reset();
     }
 }
-
-new Visualize();
