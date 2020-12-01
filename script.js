@@ -2,6 +2,7 @@ class Visualize {
     constructor() {
         this.createDocument();
         this.getData('http://localhost:3000/repositories', this.renderOptions);
+        // this.selectEvent()
         this.renderGitLists(1);
         this.gitButtonSetup();
     }
@@ -9,6 +10,7 @@ class Visualize {
     workingDir = document.getElementById("working-directory-list");
     stagingArea = document.getElementById("staging-area-list");
     repoArea = document.getElementById("repository-area-list");
+    repoList = document.getElementById("repo-options")
 
     gitAddDotBtn = document.getElementById('git-add-dot');
     gitCommitBtn = document.getElementById('git-commit');
@@ -34,14 +36,18 @@ class Visualize {
         })
     }
 
+    selectEvent() {
+        this.repoList.addEventListener('submit', this.renderGitLists(this.repoList.value));
+    }
+
     createDocument() {
         this.form.addEventListener("submit", (event) => {
             event.preventDefault();
             const name = event.target.fileName.value;
-            // this.createListItem(name);
+            const repoId = document.getElementById("repo-options").value;
             const data = {
                 name: name,
-                repository_id: event.target.repo.value
+                repository_id: repoId
             }
             fetch('http://localhost:3000/documents', {
                 method: "POST",
@@ -77,6 +83,8 @@ class Visualize {
 
                 const itemDiv = document.createElement('div');
                     itemDiv.classList.add('item');
+                    itemDiv.dataset.fileName = object.name;
+                    itemDiv.dataset.versionId = version.id;
                 const fileI = document.createElement('i');
                     fileI.className += 'large file alternate middle aligned icon';
                 const contentDiv = document.createElement('div');
