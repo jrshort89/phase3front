@@ -108,10 +108,21 @@ class Visualize {
 
     gitCommandRunSetup() {
         let gitCommandForm = document.getElementById("git-command-form");
-        gitCommandForm.addEventListener("submit", (event) => {
-            event.preventDefault();
-            console.log(event.target.git_command.value);
-        })
+        gitCommandForm.addEventListener("submit", (event) => this.gitCommandRunCallback(event))
+    }
+
+    gitCommandRunCallback(event){
+        event.preventDefault();
+        const command = event.target.git_command.value
+        const command_split = command.split(" ");
+
+        if(command_split[0] == "git" && command_split[1] == "add"){
+            if(command_split[2] = "."){
+                
+            }else if (command_split[name]){
+
+            }
+        }
     }
 }
 
