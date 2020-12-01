@@ -2,8 +2,8 @@ class Visualize {
     constructor() {
         this.createDocument();
         this.getData('http://localhost:3000/repositories', this.renderOptions);
-        // this.selectEvent()
-        this.renderGitLists(1);
+        this.selectEvent();
+        // this.renderGitLists(1);
         this.gitButtonSetup();
         this.gitCommandRunSetup();
     }
@@ -38,7 +38,10 @@ class Visualize {
     }
 
     selectEvent() {
-        this.repoList.addEventListener('submit', this.renderGitLists(this.repoList.value));
+        document.getElementById('repo-form-selector').addEventListener('submit', (event) =>{
+            event.preventDefault();
+            this.renderGitLists(this.repoList.value)
+        });
     }
 
     createDocument() {
