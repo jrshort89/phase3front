@@ -69,9 +69,9 @@ class Visualize {
                     body: JSON.stringify(data)
                 })
                 .then(res => res.json())
-                .then(() => {
+                .then((version) => {
                     this.fileForm.reset();
-                    this.createListItem(name, 1, this.workingDir)
+                    this.createListItem(name, version.id, this.workingDir)
                 })
                 .catch(() => {
                     this.fileError.style.display = "inline-block";
