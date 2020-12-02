@@ -3,20 +3,24 @@ class Visualize {
         this.createDocument();
         this.getData('http://localhost:3000/repositories', this.renderOptions);
         this.selectEvent();
-        this.closeError.addEventListener('click', () => {
-            this.fileError.style.display = 'none';
-        })
+        this.closeError.addEventListener('click', () => this.fileError.style.display = 'none');
+        this.repoButton.addEventListener('click', () => this.repoDiv.classList.toggle('repo-div'));
+        this.createRepo();
     }
 
     workingDir = document.getElementById("working-directory-area-list");
     stagingArea = document.getElementById("staging-area-list");
     repoArea = document.getElementById("repository-area-list");
     repoList = document.getElementById("repo-options");
+    repoButton = document.getElementById("new-repo-button");
+    repoForm = document.getElementById("new-repo");
+    repoDiv = document.getElementById("repo-div");
 
     fileError = document.getElementById("file-error");
     closeError = document.getElementById("close-error");
+    repoErr = document.getElementById('repo-error');
 
-    repoForm = document.getElementById('repo-form');
+    fileForm = document.getElementById('doc-form');
 
     getData(url, method) {
         fetch(url)
@@ -37,15 +41,19 @@ class Visualize {
     selectEvent() {
         document.getElementById("repo-options").addEventListener('change', (event) => {
             event.preventDefault();
-            this.workingDir.innerHTML = '';
-            this.stagingArea.innerHTML = '';
-            this.repoArea.innerHTML = '';
+            this.clearList();
             this.renderGitLists(this.repoList.value)
         });
     }
 
+    clearList() {
+        this.workingDir.innerHTML = '';
+        this.stagingArea.innerHTML = '';
+        this.repoArea.innerHTML = '';
+    }
+
     createDocument() {
-        this.repoForm.addEventListener("submit", (event) => {
+        this.fileForm.addEventListener("submit", (event) => {
             event.preventDefault();
             const name = event.target.fileName.value;
             const repoId = document.getElementById("repo-options").value;
@@ -61,16 +69,43 @@ class Visualize {
                     body: JSON.stringify(data)
                 })
                 .then(res => res.json())
-                .then(json => {
-                    this.repoForm.reset();
+                .then(() => {
+                    this.fileForm.reset();
                     this.createListItem(name, 1, this.workingDir)
                 })
+                .catch(() => {
+                    this.fileError.style.display = "inline-block";
+                    setTimeout(() => this.fileError.style.display = 'none', 5000);
+                })
+        });
+    }
+
+    createRepo() {
+        this.repoForm.addEventListener('submit', (event) => {
+            event.preventDefault();
+            const data = {
+                name: event.target.name.value
+            }
+            fetch('http://localhost:3000/repositories', {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(data)
+                })
+                .then(res => res.json())
+                .then(data => {
+                    const repoList = document.getElementById('repo-options');
+                    const option = document.createElement('option');
+                    option.textContent = data.name;
+                    option.value = data.id;
+                    repoList.append(option);
+                    this.repoDiv.classList.toggle('repo-div');
+                    repoList.value = data.id;
+                    this.clearList();
+                    this.repoForm.reset();
+                })
                 .catch(err => {
-                    console.log(err);
-                    if (err) {
-                        this.fileError.style.display = "inline-block";
-                        setTimeout(() => this.fileError.style.display = 'none', 5000);
-                    }
+                    this.repoErr.style.display = "inline-block";
+                    setTimeout(() => this.repoErr.style.display = 'none', 5000);
                 })
         });
     }
@@ -117,6 +152,4 @@ class Visualize {
         itemDiv.append(fileI, contentDiv);
         list.append(itemDiv);
     }
-
-
 }

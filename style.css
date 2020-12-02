@@ -19,3 +19,7 @@ form {
 .git-area>h3 {
     text-align: center;
 }
+
+.repo-div {
+    display: none;
+}
