@@ -20,9 +20,27 @@
             <select class="ui dropdown" id="repo-options" name="repo">
                 <option disabled selected>Select a repository</option>
             </select>
+            <button type="button" class="ui blue button" id="new-repo-button">Create A New Repository</button>
         </form>
+        <div id="repo-div" class="repo-div">
+            <form id="new-repo">
+                <div class="ui input focus">
+                    <input name="name" type="text" placeholder="Name your repository...">
+                    <input type="submit" value="Create Repository" class="ui green button">
+                </div>
+                <div class="ui negative message hidden" id="repo-error">
+                    <i class="close icon" id="close-error"></i>
+                    <div class="header">
+                        A repository with this name is already in the working directory!
+                    </div>
+                    <p>Please select that repository or choose another repository name.
+                    </p>
+                </div>
+            </form>
+        </div>
 
-        <form id="repo-form">
+
+        <form id="doc-form">
             <div class="ui input focus">
                 <input name="fileName" type="text" placeholder="Create a file name...">
                 <input type="submit" value="Create File" class="ui green button">
