@@ -69,8 +69,9 @@ class Visualize {
                     body: JSON.stringify(data)
                 })
                 .then(res => res.json())
-                .then(() => {
+                .then((json) => {
                     this.fileForm.reset();
+                    console.log(json)
                     this.createListItem(name, 1, this.workingDir)
                 })
                 .catch(() => {
