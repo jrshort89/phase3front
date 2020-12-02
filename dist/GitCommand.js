@@ -54,7 +54,7 @@ class GitCommand {
       let workingDirList = [...this.workingDir.querySelectorAll(".item")];
       const stagingList = this.stagingArea;
       if (command_split[2] == "." && workingDirList.length > 0) {
-        const versionIds = workingDirList.map((list) => list.dataset.versionId);
+        const versionIds = workingDirList.map((list) => +list.dataset.versionId);
         await this.updateVerstionStage(versionIds, 2);
         this.moveListsToOtherArea(workingDirList, stagingList);
       } else if (
@@ -63,7 +63,7 @@ class GitCommand {
         const fileDiv = workingDirList.find(
           (div) => div.dataset.fileName == command_split[2]
         );
-        const versionId = fileDiv.dataset.versionId;
+        const versionId = [+fileDiv.dataset.versionId];
         workingDirList = [fileDiv];
         await this.updateVerstionStage(versionId, 2);
         this.moveListsToOtherArea(workingDirList, stagingList);
@@ -73,7 +73,7 @@ class GitCommand {
       let stagingList = [...this.stagingArea.querySelectorAll(".item")];
       let workingDirList = this.workingDir;
       if (command_split[2] == ".") {
-        const versionIds = stagingList.map((list) => list.dataset.versionId);
+        const versionIds = stagingList.map((list) => +list.dataset.versionId);
         await this.updateVerstionStage(versionIds, 1);
         this.moveListsToOtherArea(stagingList, workingDirList);
       } else if (
@@ -82,7 +82,7 @@ class GitCommand {
         const fileDiv = stagingList.find(
           (div) => div.dataset.fileName == command_split[2]
         );
-        const versionId = fileDiv.dataset.versionId;
+        const versionId = [+fileDiv.dataset.versionId];
         stagingList = [fileDiv];
         await this.updateVerstionStage(versionId, 1);
         this.moveListsToOtherArea(stagingList, workingDirList);
@@ -125,8 +125,23 @@ class GitCommand {
   }
 
   moveListsToOtherArea(fromList, toList) {
-    fromList.forEach(function (div) {
+    const list = [...toList.children];
+    let listShouldMove = [];
+    let listShouldRemove = [];
+    fromList.forEach(function (fromItem) {
+      const isFound = list.find(
+        (l) => l.dataset.fileName == fromItem.dataset.fileName
+      );
+      if (isFound) listShouldRemove.push(fromItem);
+      else listShouldMove.push(fromItem);
+    });
+
+    listShouldMove.forEach(function (div) {
       toList.appendChild(div);
+    });
+
+    listShouldRemove.forEach(function (div) {
+      div.remove()
     });
   }
 
